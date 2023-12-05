@@ -1,0 +1,25 @@
+---
+x-netbox-build: &netbox-build
+    build:
+      context: ..
+      dockerfile: "development/Dockerfile"
+
+x-netbox-base: &netbox-base
+  image: "dcam-ui"
+  container_name: "dcam-ui"
+  hostname: "dcam-ui"
+  env_file:
+    - "dev.env"
+    - "creds.env"
+  tty: true
+
+
+version: '3.8'
+services:
+  dcam-ui:
+    depends_on:
+      dcam-db:
+        condition: "service_healthy"
+      dcam-redis:
+        condition: "service_started"
+    <<: [*netbox-build, *netbox-base]

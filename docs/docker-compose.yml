@@ -1,0 +1,27 @@
+---
+version: '3.8'
+services:
+  dcam-ui:
+    image: "dcam-ui"
+    container_name: "dcam-ui"
+    hostname: "dcam-ui"
+    build:
+      context: ..
+      dockerfile: "development/Dockerfile"
+    volumes:
+      - "..:/app:cached"
+      - "~/dev/work/sap/backups:/backups"
+    env_file:
+      - "dev.env"
+      - "creds.env"
+    depends_on:
+      dcam-db:
+        condition: "service_healthy"
+      dcam-redis:
+        condition: "service_started"
+    ports:
+      - "8080:8080"
+
+volumes:
+  app_data: {}
+  backup_data: {}

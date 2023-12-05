@@ -1,0 +1,30 @@
+---
+version: "3.8"
+services:
+  dcam-ui:
+    ports:
+      - "8080:8080"
+    volumes:
+      - "../:/app/"
+
+  dcam-docs:
+    entrypoint: "mkdocs serve -v -a 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    volumes:
+      - "../:/app/"
+    image: "dcam-ui"
+    container_name: "dcam-docs"
+    hostname: "dcam-docs"
+    healthcheck:
+      disable: true
+    tty: true
+
+    depends_on:
+      dcam-ui:
+        condition: "service_started"
+
+volumes:
+  app_data: {}
+  doc_data: {}
+
